@@ -1,6 +1,6 @@
 const container1=document.querySelector('.container1')
 const container2=document.querySelector('.container2')
-const h2=document.querySelectorAll('.box h2')
+const span=document.querySelectorAll('.box span')
 const title=document.querySelector('.title')
 const ingredient=document.querySelector('.ingredients')
 const AddButton=document.querySelector('.Add')
@@ -14,88 +14,81 @@ const addData=document.querySelector('.AddData')
 const box=document.querySelector('.box')
 
 
-function getData(){
+function getData() {
     fetch('https://www.themealdb.com/api/json/v1/1/random.php')
-        .then(res=>res.json())
-        .then(data=>{
-data.meals.map(item=>{
-    id=item.idMeal
-    console.log(id)
-    GetPhotoButton.onclick=()=>{
-    if (img.src===''){
-        img.style.height='0px'
-        img.style.width='0px'
-    }else{
-            img.src=item.strMealThumb
+        .then(res => res.json())
+        .then(data => {
 
-        }
-    }
 
-})
 
+            GetPhotoButton.onclick = () => {
+                if (img.src === '') {
+
+                } else {
+                    img.src = data.meals[0].strMealThumb
+
+                }
+            }
 
         })
+
+
 }
 getData()
-let ingredients=[]
-let recipes=[]
+let pIngredients=[]
+let recipe={
+    FoodTitle:span[0].innerHTML,
+    Description:span[1].innerHTML,
+    ingredients:pIngredients,
+    calories:span[3].innerHTML,
+    image:img.src
+}
 function saveData(){
-    let Data={
-        FoodTitle:h2[0].innerHTML,
-        Description:h2[1].innerHTML,
-            ingredients1:ingredients[0]+",",
-            ingredients2:ingredients[1]+",",
-            ingredients3:ingredients[2],
-        calories:h2[5].innerHTML,
-        image:img.src
-    }
 
-    recipes.push(Data)
+    let recipes=JSON.parse(localStorage.getItem('recipes'))
+if (recipes===null){
+    recipes=[]
+}
+    recipes.push(recipe)
     localStorage.setItem('recipes', JSON.stringify(recipes));
 }
 
 AddButton.onclick=()=>{
-    if (ingredient.value==='')return
-    if (h2[2].innerHTML==='Ingredient 1:'){
-        h2[2].innerHTML='Ingredient 1: '+ingredient.value
+    pIngredients.push(ingredient.value)
+        span[2].innerHTML=pIngredients
 
-        ingredients.push(ingredient.value)
-    }else if ( h2[3].innerHTML==='Ingredient 2:'){
-        h2[3].innerHTML='Ingredient 2: '+ingredient.value
-        ingredients.push(ingredient.value)
-    }else if ( h2[4].innerHTML==='Ingredient 3:') {
-        h2[4].innerHTML='Ingredient 3: '+ingredient.value
-        ingredients.push(ingredient.value)
-    }
-    console.log(ingredients)
+    console.log(pIngredients)
+    ingredient.value=''
+
 }
 
 addData.onclick=()=>{
     if (  title.value&&Description.value&&Calories.value===''){
-        return
+return
     }else {
-
-        h2[0].innerHTML+=title.value
-        h2[1].innerHTML+=Description.value
-        h2[5].innerHTML+=Calories.value
-
+        span[0].innerHTML+=title.value
+        span[1].innerHTML+=Description.value
+       span[3].innerHTML+=Calories.value
     }
+    title.value=''
+    Description.value=''
+    Calories.value=''
 }
 AddRecipeButton.onclick=()=>{
-
-    if (  h2[0].innerHTML==='Food Title: '&&h2[1].innerHTML==='Description: '&& h2[2].innerHTML==='Ingredient 1: '&& h2[3].innerHTML==='Ingredient 2: '&& h2[4].innerHTML==='Ingredient 3: '&&h2[5].innerHTML==='Calories: '){
-        return
-    }else{
+if(recipe.ingredients.length<3){
+    return
+}
+if (img.src===''){
+    return
+}
         saveData()
-        h2[0].innerHTML='Food Title: '
-        h2[1].innerHTML='Description: '
-        h2[2].innerHTML='Ingredient 1: '
-        h2[3].innerHTML='Ingredient 2: '
-        h2[4].innerHTML='Ingredient 3: '
-        h2[5].innerHTML='Calories: '
-        ingredients=[]
+        span[0].innerHTML=''
+        span[1].innerHTML=''
+       span[2].innerHTML=''
+       span[3].innerHTML=''
+        pIngredients=[]
         img.src=''
-    }
+
 
 
 }

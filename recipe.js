@@ -7,23 +7,20 @@ const main=document.querySelector('.main')
 
 
 
-const arr=JSON.parse(localStorage.getItem('recipes'))
-function getData(){
+let arr=JSON.parse(localStorage.getItem('recipes'))
+function getData(data){
 
     main.innerHTML=``
-    arr.map(item=>{
+    data.map(item=>{
         main.innerHTML+=`
 <div class="box">
    <img src="${item.image}" alt="">
-      <h4>${item.FoodTitle}</h4>
-      <p>${item.Description}</p>
-      <h3>Ingredients:</h3>
-      <ul>
-      <li>${item.ingredients1}</li>
-      <li>${item.ingredients2}</li>
-      <li>${item.ingredients3}</li>
-</ul>
-      <h4>${item.calories}</h4>
+      <h4>Food Title: ${item.FoodTitle}</h4>
+      <p>Description: ${item.Description}</p>
+      
+      <div>Ingredients:${item.ingredients.join(",")}</div>
+      
+      <h4>Calories: ${item.calories}</h4>
 </div>
   
     
@@ -31,23 +28,19 @@ function getData(){
     })
 
 }
-getData()
+getData(arr)
 filter.onclick=()=>{
     filters()
 
 }
 function filters(){
-    console.log(title.value,calories.value,ingredients.value)
-    let filtered=arr.filter(item=>title.value===''?item.title:item.title===title.value)
+    console.log(arr)
+    let filtered=arr.filter(item=>title.value==='' ?item.FoodTitle:item.FoodTitle===title.value)
 
-    let caloriesFilter=filtered.filter(item=>calories.value===''?item.calories:item.calories===calories.value)
+let calFilter=filtered.filter(item=>calories.value===''?item.calories:item.calories===calories.value)
+let ingFilter=calFilter.filter(item=>ingredients.value===''?item.ingredients:item.ingredients.includes(ingredients.value))
 
-    let ingredients1Filter=caloriesFilter.filter(item=>ingredients.value===''?item.ingredients1:item.ingredients1===ingredients.value)
-    let ingredients2Filter=ingredients1Filter.filter(item=>ingredients.value===''?item.ingredients2:item.ingredients2===ingredients.value)
-    let ingredients3Filter=ingredients2Filter.filter(item=>ingredients.value===''?item.ingredients3:item.ingredients3===ingredients.value)
-    console.log(ingredients3Filter)
-    getData(ingredients3Filter)
+    getData(ingFilter)
 
 }
 
-console.log(arr)
